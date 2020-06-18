@@ -1,4 +1,4 @@
-import { createExternalSource, createPage, navigateTo } from "atomic";
+import { createExternalSource, createPage, navigateTo } from "@aacgn/atomic";
 
 import "./index.css";
 

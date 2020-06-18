@@ -1,4 +1,4 @@
-import { bootstrap } from "atomic";
+import { bootstrap } from "@aacgn/atomic";
 
 import Routes from "./router";
 

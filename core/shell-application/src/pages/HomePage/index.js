@@ -1,4 +1,4 @@
-import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism } from "atomic";
+import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism } from "@aacgn/atomic";
 
 import "./index.css";
 
