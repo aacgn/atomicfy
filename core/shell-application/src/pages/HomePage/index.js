@@ -6,11 +6,6 @@ const HomePage = () => createPage(
     {
         name: "home",
         context: {},
-        methods: {
-            redirectToLogin: function() {
-                navigateTo("/");
-            }
-        },
         mount: function(){
             return createTemplate({}, 'div', [
                 createOrganism({}, 'div', [
@@ -31,10 +26,11 @@ const HomePage = () => createPage(
         },
         onMount: function(ref){
             const authorizedUser = window.localStorage.getItem("authorizedUser");
-            const authorizedUserParse = JSON.parse(authorizedUser);
 
-            if (!authorizedUserParse)
-                this.methods.redirectToLogin();
+            if (!authorizedUser)
+                navigateTo("/");
+
+            const authorizedUserParse = JSON.parse(authorizedUser);
 
             dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
         }
