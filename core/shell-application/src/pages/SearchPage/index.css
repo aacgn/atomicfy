@@ -1,10 +1,10 @@
-.home__content {
+.search__content {
     height: 90vh !important;
     left: 200px !important;
     width: calc(100% - 200px) !important;
 }
 
-.home__player {
+.search__player {
     height: 10vh !important;
     top: unset !important;
 }

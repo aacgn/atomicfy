@@ -5,24 +5,24 @@ import { NavBarItems } from "../../utils/enums/navbar-items.enum";
 
 import NavBar from "../../components/NavBar/index";
 
-const HomePage = () => createPage(
+const SearchPage = () => createPage(
     {
-        name: "home",
+        name: "search",
         context: {},
         mount: function(){
             return createTemplate({}, 'div', [
-                NavBar(NavBarItems.HOME),
+                NavBar(NavBarItems.SEARCH),
                 createOrganism({}, 'div', [
                     createExternalSource({
-                        id: "home",
-                        className: "external-source home__content",
+                        id: "search",
+                        className: "external-source search__content",
                         sourceUrl: "http://localhost:3004"
                     })
                 ]),
                 createOrganism({}, 'div', [
                     createExternalSource({
                         id: "player",
-                        className: "external-source home__player",
+                        className: "external-source search__player",
                         sourceUrl: "http://localhost:3005"
                     })
                 ])
@@ -36,9 +36,9 @@ const HomePage = () => createPage(
 
             const authorizedUserParse = JSON.parse(authorizedUser);
 
-            dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
+            dispatchEvent("authorizedUser", authorizedUserParse, ["search", "player"]);
         }
     }
 );
 
-export default HomePage;
+export default SearchPage;
