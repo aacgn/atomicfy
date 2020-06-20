@@ -27,7 +27,7 @@ const HomePage = () => createPage(
                     createExternalSource({
                         id: "player",
                         className: "external-source home__player",
-                        sourceUrl: "http://localhost:3005"
+                        sourceUrl: "http://localhost:3002"
                     })
                 ])
             ]

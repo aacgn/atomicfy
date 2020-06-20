@@ -28,7 +28,7 @@ const SearchPage = () => createPage(
                         createExternalSource({
                             id: "player",
                             className: "external-source search__player",
-                            sourceUrl: "http://localhost:3005"
+                            sourceUrl: "http://localhost:3002"
                         })
                     ])
                 ]

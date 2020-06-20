@@ -1,0 +1,27 @@
+{
+  "name": "player-micro-frontend",
+  "version": "1.0.0",
+  "dependencies": {
+    "@babel/runtime": "^7.10.2",
+    "core-js": "^3.6.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-decorators": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^2.1.1",
+    "html-webpack-plugin": "^4.3.0",
+    "style-loader": "^0.23.1",
+    "svelte": "^3.0.0",
+    "svelte-loader-hot": "^0.3.0",
+    "webpack": "4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "3.10.3"
+  },
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  }
+}
