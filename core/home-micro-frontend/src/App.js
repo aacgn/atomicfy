@@ -43,10 +43,7 @@ class App extends React.Component {
 
         switch(event.event) {
           case "authorizedUser":
-            const spotifyApi = new SpotifyWebApi({
-              clientId: process.env.CLIENT_ID,
-              clientSecret: process.env.CLIENT_SECRET
-            });
+            const spotifyApi = new SpotifyWebApi({});
 
             spotifyApi.setAccessToken(event.data.accessToken);
     
