@@ -10,23 +10,29 @@ const SearchPage = () => createPage(
         name: "search",
         context: {},
         mount: function(){
-            return createTemplate({}, 'div', [
-                NavBar(NavBarItems.SEARCH),
-                createOrganism({}, 'div', [
-                    createExternalSource({
-                        id: "search",
-                        className: "external-source search__content",
-                        sourceUrl: "http://localhost:3004"
-                    })
-                ]),
-                createOrganism({}, 'div', [
-                    createExternalSource({
-                        id: "player",
-                        className: "external-source search__player",
-                        sourceUrl: "http://localhost:3005"
-                    })
-                ])
-            ]);
+            return createTemplate(
+                {
+                    className: "search"
+                }, 
+                'div', 
+                [
+                    NavBar(NavBarItems.SEARCH),
+                    createOrganism({}, 'div', [
+                        createExternalSource({
+                            id: "search",
+                            className: "external-source search__content",
+                            sourceUrl: "http://localhost:3004"
+                        })
+                    ]),
+                    createOrganism({}, 'div', [
+                        createExternalSource({
+                            id: "player",
+                            className: "external-source search__player",
+                            sourceUrl: "http://localhost:3005"
+                        })
+                    ])
+                ]
+            )
         },
         onMount: function(ref){
             const authorizedUser = window.localStorage.getItem("authorizedUser");

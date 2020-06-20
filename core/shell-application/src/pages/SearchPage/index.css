@@ -1,3 +1,7 @@
+.search {
+    background-color: #191919;
+}
+
 .search__content {
     height: 90vh !important;
     left: 200px !important;
@@ -7,4 +11,6 @@
 .search__player {
     height: 10vh !important;
     top: unset !important;
+    background-color: #282828;
+    border-top: 1px solid #000;
 }

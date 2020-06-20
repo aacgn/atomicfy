@@ -10,13 +10,17 @@ const HomePage = () => createPage(
         name: "home",
         context: {},
         mount: function(){
-            return createTemplate({}, 'div', [
+            return createTemplate({
+                className: "home"
+            }, 
+            'div', 
+            [
                 NavBar(NavBarItems.HOME),
                 createOrganism({}, 'div', [
                     createExternalSource({
                         id: "home",
                         className: "external-source home__content",
-                        sourceUrl: "http://localhost:3004"
+                        sourceUrl: "http://localhost:3001"
                     })
                 ]),
                 createOrganism({}, 'div', [
@@ -26,8 +30,8 @@ const HomePage = () => createPage(
                         sourceUrl: "http://localhost:3005"
                     })
                 ])
-            ]);
-        },
+            ]
+        )},
         onMount: function(ref){
             const authorizedUser = window.localStorage.getItem("authorizedUser");
 
@@ -36,7 +40,9 @@ const HomePage = () => createPage(
 
             const authorizedUserParse = JSON.parse(authorizedUser);
 
-            dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
+            setTimeout(() => {
+                dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
+            }, 3000);
         }
     }
 );

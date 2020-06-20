@@ -1,4 +1,5 @@
 export const NavBarItems = {
     HOME: "HOME",
-    SEARCH: "SEARCH"
+    SEARCH: "SEARCH",
+    YOUR_LIBRARY: "YOUR_LIBRARY"
 }
