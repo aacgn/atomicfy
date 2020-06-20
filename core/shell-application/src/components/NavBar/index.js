@@ -19,7 +19,7 @@ const NavBar = (activeItem) => createOrganism(
             "img"
         ),
         NavBarItem('<i class="material-icons">home</i>', "Home", activeItem === NavBarItems.HOME, "/home"),
-        NavBarItem('<i class="material-icons">search</i>', "Search", activeItem === NavBarItems.SEARCH, "/search"),
+        NavBarItem('<i class="material-icons">search</i>', "Search"),
         NavBarItem('<i class="material-icons">view_headline</i>', "Your library"),
         createMolecule(
             {

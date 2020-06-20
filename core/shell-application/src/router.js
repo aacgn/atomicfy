@@ -1,6 +1,5 @@
 import LoginPage from "./pages/LoginPage/index";
 import HomePage from "./pages/HomePage/index";
-import SearchPage from "./pages/SearchPage/index";
 
 const Routes = [
     {
@@ -10,10 +9,6 @@ const Routes = [
     {
         path: "/home",
         page: HomePage()
-    },
-    {
-        path: "/search",
-        page: SearchPage()
     }
 ]
 

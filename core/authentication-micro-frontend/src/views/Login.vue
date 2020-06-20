@@ -85,7 +85,13 @@ export default {
       });
 
       const authorizeURL = spotifyApi.createAuthorizeURL(
-        ["user-read-private", "user-read-email"],
+        [
+          "streaming", 
+          "user-read-email", 
+          "user-read-private", 
+          "user-read-currently-playing",
+          "user-modify-playback-state"
+        ],
         "authorize-micro-frontend-state",
         true,
         true

@@ -1388,7 +1388,96 @@ SpotifyWebApi.prototype = {
       .withQueryParameters(options)
       .build()
       .execute(HttpManager.get, callback);
+  },
+
+  /**
+   * Retrieve recently played tracks.
+   * @param {Object} [options] Options, being type, limit, after, before.
+   * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+   * @returns {Promise|undefined} A promise that if successful, resolves to a paging object containing simple tracks.
+   * Not returned if a callback is given.
+   */
+  getRecentlyPlayed: function(options, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/recently-played')
+      .withQueryParameters(options)
+      .build()
+      .execute(HttpManager.get, callback);
+  },
+
+  /**
+   * Retrieve currently playing track.
+   * @param {Object} [options] Options, being type, limit, after, before.
+   * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+   * @returns {Promise|undefined} A promise that if successful, resolves to a paging object containing simple tracks.
+   * Not returned if a callback is given.
+   */
+  getCurrentlyPlaying: function(options, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/currently-playing')
+      .withQueryParameters(options)
+      .build()
+      .execute(HttpManager.get, callback);
+  },
+
+  startUserPlayback: function(device_id, options, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/play?device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .withBodyParameters(options)
+      .build()
+      .execute(HttpManager.put, callback);
+  },
+  
+  pauseUserPlayback: function(device_id, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/pause?device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .build()
+      .execute(HttpManager.put, callback);
+  },
+
+  nextUserPlayback: function(device_id, options, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/next?device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .withBodyParameters(options)
+      .build()
+      .execute(HttpManager.post, callback);
+  },
+  
+  previousUserPlayback: function(device_id, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/previous?device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .build()
+      .execute(HttpManager.post, callback);
+  },
+
+  suffleUserPlayback: function(state, device_id, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/shuffle?state=' + state + '&device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .build()
+      .execute(HttpManager.put, callback);
+  },
+
+  repeatUserPlayback: function(state, device_id, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/repeat?state=' + state + '&device_id=' + device_id)
+      .withHeaders({ 'Content-Type' : 'application/json' })
+      .build()
+      .execute(HttpManager.put, callback);
+  },
+
+  changeVolumeUserPlayback: function(volume_percent, device_id, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+    .withPath('/v1/me/player/volume?volume_percent =' + volume_percent + '&device_id=' + device_id)
+    .withHeaders({ 'Content-Type' : 'application/json' })
+    .build()
+    .execute(HttpManager.put, callback);
   }
+
 };
 
 SpotifyWebApi._addMethods = function(methods) {

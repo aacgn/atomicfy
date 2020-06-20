@@ -5,35 +5,48 @@ import ItemCard from "./components/ItemCard/index";
 import "./App.css";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+    
+    // State
     this.state = {
       loading: true,
       name: "Undefined",
       data: []
     };
 
-    this.handleData = this.handleData.bind(this);
+    // Attributes
+    this.spotifyApi = new SpotifyWebApi({});
   }
 
-  handleData(data) {
-    this.setState(
-      {
-        ...this.state,
-        loading: false,
-        name: data.message,
-        data: data.playlists.items.map(
-          (item) => {
-            return {
-              id: item.id,
-              imgSrc: item.images[0].url,
-              name: item.name,
-              description: item.description
-            }
+  requestFeaturedPlaylists = () => {
+    this.spotifyApi.getFeaturedPlaylists({
+      country: "BR",
+      limit: 23
+    })
+    .then(
+      (data) => {
+        this.setState(
+          {
+            ...this.state,
+            loading: false,
+            name: data.body.message,
+            data: data.body.playlists.items.map(
+              (item) => {
+                return {
+                  id: item.id,
+                  imgSrc: item.images[0].url,
+                  name: item.name,
+                  description: item.description
+                }
+              }
+            )
           }
         )
-      }
-    )
+    }, 
+    (err) => {
+      console.log(err);
+    });
   }
 
   componentDidMount() {
@@ -43,28 +56,14 @@ class App extends React.Component {
 
         switch(event.event) {
           case "authorizedUser":
-            const spotifyApi = new SpotifyWebApi({});
-
-            spotifyApi.setAccessToken(event.data.accessToken);
-    
-            spotifyApi.getFeaturedPlaylists({
-              country: "BR",
-              limit: 23
-            })
-            .then(
-              (data) => {
-                console.log(data.body);
-                this.handleData(data.body);
-            }, 
-            (err) => {
-              console.log(err);
-            });
+            this.spotifyApi.setAccessToken(event.data.accessToken);
+            this.requestFeaturedPlaylists();
             break;
           default:
             break;
         }
       }
-    })
+    });
   }
 
   render() {
