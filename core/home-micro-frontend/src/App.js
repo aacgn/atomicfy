@@ -1,15 +1,15 @@
 import React from "react";
-import "./App.css";
-
 import SpotifyWebApi from "spotify-web-api-node";
-
+import ScaleLoader from "react-spinners/ScaleLoader";
 import ItemCard from "./components/ItemCard/index";
+import "./App.css";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "Loading...",
+      loading: true,
+      name: "Undefined",
       data: []
     };
 
@@ -20,6 +20,7 @@ class App extends React.Component {
     this.setState(
       {
         ...this.state,
+        loading: false,
         name: data.message,
         data: data.playlists.items.map(
           (item) => {
@@ -72,21 +73,32 @@ class App extends React.Component {
   render() {
     return (
       <div className="home">
-        <span className="home__title">
-          {
-            this.state.name
-          }
-          <div className="home__list">
-            {this.state.data.map((track) => (
-              <ItemCard
-                key={track.id}
-                imgSrc={track.imgSrc}
-                name={track.name}
-                description={track.description}
-              ></ItemCard>
-            ))}
+        {
+          this.state.loading ?
+            <div className="home__loading">
+              <ScaleLoader
+                size={150}
+                color={"white"}
+                loading={this.state.loading}
+              />
           </div>
-        </span>
+        :
+          <span className="home__title">
+            {
+              this.state.name
+            }
+            <div className="home__list">
+              {this.state.data.map((track) => (
+                <ItemCard
+                  key={track.id}
+                  imgSrc={track.imgSrc}
+                  name={track.name}
+                  description={track.description}
+                ></ItemCard>
+              ))}
+            </div>
+          </span>
+        }
       </div>
     );
   }
