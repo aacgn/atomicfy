@@ -101,7 +101,7 @@
 		player.addListener('player_state_changed', state => {
 			isSuffle = state.shuffle;
 			isPlaying = !state.paused;
-			isRepeat = state.repeat_mode !== 'off';
+			isRepeat = state.repeat_mode > 0;
 
 			if (isPlaying)
 				requestMyCurrentTrack()
@@ -332,9 +332,8 @@
 	display: flex;
 	justify-content: space-between;
     align-items: center;
-	padding: 8px;
+    padding: 0px 8px 0px 8px;
     height: 100%;
-    max-height: 80vh;
 	background-color: #282828;
 }
 
