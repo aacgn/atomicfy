@@ -37,47 +37,51 @@ const HomePage = () => createPage(
             ]
         )},
         onMount: function(ref){
-            window.addEventListener("userActionDenied", () => {
-                alert("Only spotify premium users can use that application!");
-            });
-
-            window.addEventListener("playUserPlayback", (event) => {
-                dispatchEvent("playUserPlayback", event.detail, ["player"]);
-            });
-
             const authorizedUser = window.localStorage.getItem("authorizedUser");
 
             if (!authorizedUser)
+            {
                 navigateTo("/");
+            }
+            else
+            {
+                const authorizedUserParse = JSON.parse(authorizedUser);
 
-            const authorizedUserParse = JSON.parse(authorizedUser);
-
-            setTimeout(() => {
-                dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
-            }, 3000);
-
-            const spotifyApi = new SpotifyWebApi({});
-
-            spotifyApi.setAccessToken(authorizedUserParse.accessToken);
-
-            spotifyApi.getUserPlaylists(null, {
-                limit: 20
-            })
-            .then(
-            (data) => {
-                const myPlaylistsList = data.body.items.map(
-                    (i) => {
-                        return {
-                            name: i.name,
-                            context_uri: i.uri
+                setTimeout(() => {
+                    dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
+                }, 3000);
+    
+                const spotifyApi = new SpotifyWebApi({});
+    
+                spotifyApi.setAccessToken(authorizedUserParse.accessToken);
+    
+                spotifyApi.getUserPlaylists(null, {
+                    limit: 20
+                })
+                .then(
+                (data) => {
+                    const myPlaylistsList = data.body.items.map(
+                        (i) => {
+                            return {
+                                name: i.name,
+                                context_uri: i.uri
+                            }
                         }
-                    }
-                );
-                updateContext(ref, 'myPlaylistsList', myPlaylistsList);
-            }, 
-            (err) => {
-                console.log(err);
-            });
+                    );
+                    updateContext(ref, 'myPlaylistsList', myPlaylistsList);
+                }, 
+                (err) => {
+                    console.log(err);
+                });
+    
+                window.addEventListener("userActionDenied", () => {
+                    alert("Only spotify premium users can use that application!");
+                });
+    
+                window.addEventListener("playUserPlayback", (event) => {
+                    dispatchEvent("playUserPlayback", event.detail, ["player"]);
+                });
+            }
         }
     }
 );

@@ -41,5 +41,7 @@
     letter-spacing: normal;
     text-transform: none;
     color: #b3b3b3;
-    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
