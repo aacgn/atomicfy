@@ -22,7 +22,8 @@
     "webpack-dev-server": "3.10.3"
   },
   "dependencies": {
-    "@aacgn/atomic": "^1.0.2-alpha",
+    "@aacgn/atomic": "^1.0.3-alpha",
+    "spotify-web-api-node": "2.5.0",
     "@babel/runtime": "^7.10.2",
     "core-js": "^3.6.5"
   }

@@ -1,33 +1,35 @@
-import { createMolecule, createAtom, navigateTo } from "@aacgn/atomic";
+import { createMolecule, createAtom } from "@aacgn/atomic";
 import "./index.css";
 
-const NavBarItem = (iconHTML, text, isActive = false, redirectPath = "") => createMolecule(
+import HighlightText from "../HighlightText/index";
+
+const NavBarItem = (textContent, iconName = null, clickFunction = null, isActive = false) => createMolecule(
     {
         className: [ 
             "nav-bar__item", 
             isActive ? "nav-bar__item--active" : ""
         ].join(" "),
-        onClick: function() {
-            if (!isActive && redirectPath)
-                navigateTo(redirectPath);
+        onClick: () => {
+            if (!isActive && clickFunction)
+                clickFunction()
         }
     },
     "div",
-    [
-        createAtom(
-            {
-                innerHTML: iconHTML
-            },
-            "span"
-        ),
-        createAtom(
-            {
-                className: "item__text",
-                textContent: text
-            },
-            "span"
-        )
-    ]
+    iconName ? 
+        [
+            createAtom(
+                {
+                    className: "material-icons",
+                    textContent: iconName
+                },
+                "i"
+            ),
+            HighlightText(textContent)
+        ]
+    :
+        [
+            HighlightText(textContent)
+        ]
 );
 
 export default NavBarItem;

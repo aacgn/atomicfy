@@ -1,16 +1,14 @@
-import { createMolecule, createOrganism, createAtom } from "@aacgn/atomic";
+import { createMolecule, createOrganism, navigateTo, dispatchEvent } from "@aacgn/atomic";
 import "./index.css";
 
 import { NavBarItems } from "../../utils/enums/navbar-items.enum";
 
 import NavBarItem from "../NavBarItem/index";
+import HighlightText from "../HighlightText";
 
-const NavBar = (activeItem) => createOrganism(
-    {
-        className: "nav-bar"
-    },
-    "div",
-    [
+const NavBar = (activeItem, playlistList) => {
+
+    const mountTree = [
         createMolecule(
             {
                 className: "nav-bar__logo",
@@ -18,24 +16,48 @@ const NavBar = (activeItem) => createOrganism(
             },
             "img"
         ),
-        NavBarItem('<i class="material-icons">home</i>', "Home", activeItem === NavBarItems.HOME, "/home"),
-        NavBarItem('<i class="material-icons">search</i>', "Search"),
-        NavBarItem('<i class="material-icons">view_headline</i>', "Your library"),
+        NavBarItem("Home", "home", () => navigateTo("/home"), activeItem === NavBarItems.HOME),
+        NavBarItem("Search", "search"),
+        NavBarItem("Your library", "view_headline"),
         createMolecule(
             {
                 className: "nav-bar__playlists",
                 textContent: "Playlists"
-            }
+            },
+            "span"
         ),
-        NavBarItem('<i class="material-icons">add_box</i>', "Create Playlist"),
-        NavBarItem('<i class="material-icons">book</i>', "Liked Songs"),
+        NavBarItem("Create Playlist", "add_box"),
+        NavBarItem("Liked Songs", "book"),
         createMolecule(
             {
                 className: "nav-bar__separator"
             },
             "div"
         )
-    ]
-);
+    ];
+
+    if (playlistList) {
+        var moleculeMountTree = [];
+        playlistList.forEach(playlist => {
+            moleculeMountTree.push(HighlightText(playlist.name, () => dispatchEvent("playUserPlayback", playlist.context_uri, ["player"])))
+        });
+        const molecule = createMolecule(
+            {
+                className: "nav-bar__playlists-list"
+            },
+            "div",
+            moleculeMountTree
+        )
+        mountTree.push(molecule);
+    }
+
+    return createOrganism(
+        {
+            className: "nav-bar"
+        },
+        "div",
+        mountTree
+    );
+}
 
 export default NavBar;

@@ -1,13 +1,8 @@
-.nav-bar__item {
-    color: #b3b3b3;
-    padding: 8px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+.highlight__text {
+    padding: 0 8px;
     -webkit-box-align: center;
     -ms-flex-align: center;
-    align-items: center;
-    height: 35px;
+    height: 16px;
     font-size: 12px;
     -webkit-transition-property: color;
     transition-property: color;
@@ -18,17 +13,11 @@
     cursor: pointer;
     margin-top: 5px;
     text-transform: unset;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.nav-bar__item:first-child {
-    margin-top: 0px;
-}
-
-.nav-bar__item--active, .nav-bar__item:hover {
-    color: #fff;
-}
-
-.nav-bar__item--active {
-    background-color: #282828;
-    border-radius: 4px;
+.highlight__text:hover {
+    color: #ffffff;
 }

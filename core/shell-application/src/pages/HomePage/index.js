@@ -1,21 +1,25 @@
-import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism } from "@aacgn/atomic";
+import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism, updateContext } from "@aacgn/atomic";
 import "./index.css";
 
 import { NavBarItems } from "../../utils/enums/navbar-items.enum";
 
 import NavBar from "../../components/NavBar/index";
 
+import SpotifyWebApi from "spotify-web-api-node";
+
 const HomePage = () => createPage(
     {
         name: "home",
-        context: {},
+        context: {
+            myPlaylistsList: []
+        },
         mount: function(){
             return createTemplate({
                 className: "home"
             }, 
             'div', 
             [
-                NavBar(NavBarItems.HOME),
+                NavBar(NavBarItems.HOME, this.context.myPlaylistsList),
                 createOrganism({}, 'div', [
                     createExternalSource({
                         id: "home",
@@ -33,6 +37,14 @@ const HomePage = () => createPage(
             ]
         )},
         onMount: function(ref){
+            window.addEventListener("userActionDenied", () => {
+                alert("Only spotify premium users can use that application!");
+            });
+
+            window.addEventListener("playUserPlayback", (event) => {
+                dispatchEvent("playUserPlayback", event.detail, ["player"]);
+            });
+
             const authorizedUser = window.localStorage.getItem("authorizedUser");
 
             if (!authorizedUser)
@@ -44,13 +56,28 @@ const HomePage = () => createPage(
                 dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
             }, 3000);
 
-            window.addEventListener("userActionDenied", () => {
-                alert("Only spotify premium users can use that application!");
-            });
+            const spotifyApi = new SpotifyWebApi({});
 
-            window.addEventListener("playUserPlayback", (event) => {
-                dispatchEvent("playUserPlayback", event.detail, ["player"]);
+            spotifyApi.setAccessToken(authorizedUserParse.accessToken);
+
+            spotifyApi.getUserPlaylists(null, {
+                limit: 20
             })
+            .then(
+            (data) => {
+                const myPlaylistsList = data.body.items.map(
+                    (i) => {
+                        return {
+                            name: i.name,
+                            context_uri: i.uri
+                        }
+                    }
+                );
+                updateContext(ref, 'myPlaylistsList', myPlaylistsList);
+            }, 
+            (err) => {
+                console.log(err);
+            });
         }
     }
 );

@@ -89,6 +89,7 @@ export default {
           "streaming", 
           "user-read-email", 
           "user-read-private", 
+          "playlist-read-private",
           "user-read-currently-playing",
           "user-modify-playback-state"
         ],
