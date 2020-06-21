@@ -37,7 +37,8 @@ class App extends React.Component {
                   id: item.id,
                   imgSrc: item.images[0].url,
                   name: item.name,
-                  description: item.description
+                  description: item.description,
+                  context_uri: item.uri
                 }
               }
             )
@@ -47,6 +48,16 @@ class App extends React.Component {
     (err) => {
       console.log(err);
     });
+  }
+
+  playUserPlayback = (context_uri) => {
+    const postMessageData = {
+      hasAtomicSignature: true,
+      event: "playUserPlayback",
+      data: context_uri
+    }
+
+    window.parent.postMessage(postMessageData, "*");
   }
 
   componentDidMount() {
@@ -85,12 +96,13 @@ class App extends React.Component {
             }
             <div className="home__list">
               {this.state.data.map((track) => (
-                <ItemCard
-                  key={track.id}
-                  imgSrc={track.imgSrc}
-                  name={track.name}
-                  description={track.description}
-                ></ItemCard>
+                <div key={track.id} onClick={ () => this.playUserPlayback(track.context_uri) }>
+                  <ItemCard
+                    imgSrc={track.imgSrc}
+                    name={track.name}
+                    description={track.description}
+                  ></ItemCard>
+                </div>
               ))}
             </div>
           </span>

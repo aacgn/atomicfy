@@ -5,7 +5,7 @@
 
 	// Screen variables
 	let token = '';
-	let currentAlbum = {
+	let currentTrack = {
 		imgSrc: '', 
 		name: '',
 		artistName: ''
@@ -17,9 +17,18 @@
 
 	let deviceId = null;
 
-	const requestCurrentTrack = () => {
+	const notifyUseActionDenied = () => {
+		const postMessageData = {
+            hasAtomicSignature: true,
+			event: "userActionDenied"
+		}
+
+		window.parent.postMessage(postMessageData, "*");
+	}
+
+	const requestMyCurrentTrack = () => {
 		spotifyApi
-		.getCurrentlyPlaying()
+		.getMyCurrentPlayingTrack()
 		.then(
 			(data) => {
 				const bodyData = data.body;
@@ -27,17 +36,17 @@
 				if (bodyData) {
 					isPlaying = bodyData.is_playing;
 
-					const album = bodyData.item.album;
+					const track = bodyData.item;
 
-					currentAlbum = {
-						...currentAlbum,
-						name: album.name,
-						artistName: album.artists.map(a => a.name).join(", "),
-						imgSrc: album.images[0].url
+					currentTrack = {
+						...currentTrack,
+						name: track.name,
+						artistName: track.album.artists.map(a => a.name).join(", "),
+						imgSrc: track.album.images[0].url
 					}
 				}
 				else {
-					requestRecentlyPlayed()
+					requestMyRecentlyPlayedTracks()
 				}
 			},
 			(err) => {
@@ -46,25 +55,40 @@
 		)
 	};
 
-	const requestRecentlyPlayed = () => {
+	const requestMyRecentlyPlayedTracks = () => {
 		spotifyApi
-		.getRecentlyPlayed()
+		.getMyRecentlyPlayedTracks()
 		.then(
 			(data) => {
-				const album = data.body.items[0].track.album;
+				const track = data.body.items[0].track;
 
-				if (album) 
-					currentAlbum = {
-						...currentAlbum,
-						name: album.name,
-						artistName: album.artists.map(a => a.name).join(", "),
-						imgSrc: album.images[0].url
+				if (track) 
+					currentTrack = {
+						...currentTrack,
+						name: track.name,
+						artistName: track.album.artists.map(a => a.name).join(", "),
+						imgSrc: track.album.images[0].url
 					}
 			}, 
 			(err) => {
 				console.log(err);
 			}
 		);
+	}
+
+	const requestTransferMyPlayback = () => {
+		spotifyApi
+			.transferMyPlayback({
+				device_ids: [
+					deviceId
+				]
+			})
+			.then(
+				() => {},
+				(err) => {
+					notifyUseActionDenied();
+				}
+			);
 	}
 
 	const configureSpotifyPlayer = () => {
@@ -77,15 +101,18 @@
 		player.addListener('player_state_changed', state => {
 			isSuffle = state.shuffle;
 			isPlaying = !state.paused;
-			isRepeat = state.repeat_mode > 0;
+			isRepeat = state.repeat_mode !== 'off';
 
 			if (isPlaying)
-				requestCurrentTrack()
+				requestMyCurrentTrack()
 		 });
 
 		// Ready
 		player.addListener('ready', ({ device_id }) => {
 			deviceId = device_id;
+			console.log(deviceId);
+			requestTransferMyPlayback(deviceId);
+			requestMyCurrentTrack();
 		});
 
 		// Not Ready
@@ -99,78 +126,164 @@
 
 	const onClickSuffle = () => {
 		if (token)
-			spotifyApi.startUserPlayback(!isSuffle, deviceId);
+			spotifyApi
+			.setShuffle({
+				state: (!isSuffle).toString(),
+				device_id: deviceId
+			})
+			.then(
+				() => {},
+				(err) => {
+					console.log(err);
+					notifyUseActionDenied();
+				}
+			);
 	}
 
 	const onClickPrevious = () => {
 		if (token)
-			spotifyApi.previousUserPlayback(deviceId);
+			spotifyApi
+			.skipToPrevious({
+				device_id: deviceId
+			})
+			.then(
+				() => {},
+				(err) => {
+					console.log(err);
+					notifyUseActionDenied();
+				}
+			);
 	}
 
 	const onClickPauseOrPlay = () => {
 		if (token) {
 			if (isPlaying) {
-				spotifyApi.pauseUserPlayback(deviceId);
+				spotifyApi
+				.pause({
+					device_id: deviceId
+				})
+				.then(
+					() => {},
+					(err) => {
+						console.log(err);
+						notifyUseActionDenied();
+					}
+				);
 			}
 			else {
-				spotifyApi.startUserPlayback(deviceId);
+				spotifyApi
+				.play({
+					device_id: deviceId
+				}, {})
+				.then(
+					() => {},
+					(err) => {
+						console.log(err);
+						notifyUseActionDenied();
+					}
+				);
 			}
 		}
 	}
 
 	const onClickNext = () => {
 		if (token)
-			spotifyApi.nextUserPlayback(deviceId);
+			spotifyApi
+			.skipToNext({
+				device_id: deviceId
+			})
+			.then(
+				() => {},
+				(err) => {
+					console.log(err);
+					notifyUseActionDenied();
+				}
+			);
 	}
 
 	const onClickRepeat = () => {
 		if (token)
-			spotifyApi.repeatUserPlayback(isRepeat ? 0 : 1, deviceId);
+			spotifyApi
+			.setRepeat({
+				state: isRepeat ? 'off' : 'track',
+				device_id: deviceId
+			})
+			.then(
+				() => {},
+				(err) => {
+					console.log(err);
+					this.notifyUseActionDenied();
+				}
+			);
 	}
 
 	const onClickVolume = () => {
 		if (token) {
-			spotifyApi.changeVolumeUserPlayback(isMute ? 100 : 0, deviceId);
+			spotifyApi
+			.setVolume({
+				volume_percent: isMute ? 100 : 0,
+				device_id: deviceId
+			})
+			.then(
+				() => {},
+				(err) => {
+					console.log(err);
+					this.notifyUseActionDenied();
+				}
+			);
+
 			isMute = !isMute;
 		}
 	}
+	window.onSpotifyWebPlaybackSDKReady = () => {
+		window.addEventListener("message", (messageEvent) => {
+			const event = messageEvent.data;
+			if (event && event.hasAtomicSignature) {
 
-    window.addEventListener("message", (messageEvent) => {
-      const event = messageEvent.data;
-      if (event && event.hasAtomicSignature) {
-
-        switch(event.event) {
-          case "authorizedUser":
-			  token = event.data.accessToken;
-			  spotifyApi.setAccessToken(token);
-
-			  requestCurrentTrack();
-			  configureSpotifyPlayer();
-            break;
-          default:
-            break;
-        }
-      }
-    });
-
-	window.onSpotifyWebPlaybackSDKReady = () => { }
+				switch(event.event) {
+				case "authorizedUser":
+					token = event.data.accessToken;
+					spotifyApi.setAccessToken(token);
+					configureSpotifyPlayer();
+					break;
+				case "playUserPlayback":
+					spotifyApi
+					.play({
+						device_id: deviceId
+					}, 
+					{
+						context_uri: event.data
+					})
+					.then(
+						() => {},
+						(err) => {
+							console.log(err);
+							notifyUseActionDenied();
+						}
+					);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+	}
 </script>
 
 <main>
 	<div class="player">
-		<div class="player__album">
-			<div class="album__img">
-				{#if currentAlbum.imgSrc}
-					<img src={currentAlbum.imgSrc} alt="" />
+		<div class="player__track">
+			<div class="track__img">
+				{#if currentTrack.imgSrc}
+					<img src={currentTrack.imgSrc} alt="" />
 				{:else}
 					<div>
-						<i class="material-icons">image_not_supported</i>
 					</div>
 				{/if}
 			</div>
-			<div class="album__info">
-				<span class="album__text album__text--primary"> {currentAlbum.name} </span>
-				<span class="album__text"> {currentAlbum.artistName} </span>
+			<div class="track__info">
+				<span class="track__text track__text--primary"> {currentTrack.name} </span>
+				<span class="track__text"> {currentTrack.artistName} </span>
 			</div>
 		</div>
 		<div class="player__control">
@@ -226,18 +339,18 @@
 	background-color: #282828;
 }
 
-.player__album {
+.player__track {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.album__img img {
+.track__img img {
     width: 50px;
     height: 50px;
 }
 
-.album__img div {
+.track__img div {
 	width: 50px;
 	height: 50px;
 	background-color: rgba(179, 179, 179, 0.4);
@@ -247,19 +360,19 @@
 	color: #fff;
 }
 
-.album__info {
+.track__info {
 	display: flex;
 	flex-direction: column;
 	margin-left: 5px;
 }
 
-.album__text {
+.track__text {
 	font-family: 'proxima-nova', sans-serif;
 	font-size: 10px;
     color: #b3b3b3;
 }
 
-.album__text--primary {
+.track__text--primary {
 	font-size: 12px;
 	color: #ffffff;
 	margin-bottom: 5px;

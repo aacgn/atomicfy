@@ -6,6 +6,7 @@
     border-radius: 8px;
     isolation: isolate;
     width: 180px;
+    height: 280px;
     margin: 10px;
     cursor: pointer;
 }

@@ -1049,7 +1049,7 @@ SpotifyWebApi.prototype = {
       .withPath('/v1/me/player')
       .withHeaders({ 'Content-Type' : 'application/json' })
       .withBodyParameters({
-        'device_ids': options.deviceIds,
+        'device_ids': options.device_ids,
         'play': !!options.play
       })
       .build()
@@ -1064,11 +1064,14 @@ SpotifyWebApi.prototype = {
    * @returns {Promise|undefined} A promise that if successful, resolves into a paging object of tracks,
    *          otherwise an error. Not returned if a callback is given.
    */
-  play: function(options, callback) {
+  play: function(options, bodyOptions, callback) {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/play')
       .withHeaders({ 'Content-Type' : 'application/json' })
-      .withBodyParameters(options)
+      .withQueryParameters({
+        'device_id': options.device_id
+      })
+      .withBodyParameters(bodyOptions)
       .build()
       .execute(HttpManager.put, callback);
   },
@@ -1080,10 +1083,12 @@ SpotifyWebApi.prototype = {
    * @returns {Promise|undefined} A promise that if successful, resolves into a paging object of tracks,
    *          otherwise an error. Not returned if a callback is given.
    */
-  pause: function(callback) {
+  pause: function(options, callback) {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/pause')
-      .withHeaders({ 'Content-Type' : 'application/json' })
+      .withQueryParameters({
+        'device_id': options.device_id
+      })
       .build()
       .execute(HttpManager.put, callback);
   },
@@ -1095,10 +1100,12 @@ SpotifyWebApi.prototype = {
    * @returns {Promise|undefined} A promise that if successful, resolves into a paging object of tracks,
    *          otherwise an error. Not returned if a callback is given.
    */
-  skipToPrevious: function(callback) {
+  skipToPrevious: function(options, callback) {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/previous')
-      .withHeaders({ 'Content-Type' : 'application/json' })
+      .withQueryParameters({
+        'device_id': options.device_id
+      })
       .build()
       .execute(HttpManager.post, callback);
   },
@@ -1110,10 +1117,12 @@ SpotifyWebApi.prototype = {
    * @returns {Promise|undefined} A promise that if successful, resolves into a paging object of tracks,
    *          otherwise an error. Not returned if a callback is given.
    */
-  skipToNext: function(callback) {
+  skipToNext: function(options, callback) {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/next')
-      .withHeaders({ 'Content-Type' : 'application/json' })
+      .withQueryParameters({
+        'device_id': options.device_id
+      })
       .build()
       .execute(HttpManager.post, callback);
   },
@@ -1130,7 +1139,8 @@ SpotifyWebApi.prototype = {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/repeat')
       .withQueryParameters({
-        'state': options.state || 'off'
+        'state': options.state || 'off',
+        'device_id': options.device_id
       })
       .build()
       .execute(HttpManager.put, callback);
@@ -1148,7 +1158,27 @@ SpotifyWebApi.prototype = {
     return WebApiRequest.builder(this.getAccessToken())
       .withPath('/v1/me/player/shuffle')
       .withQueryParameters({
-        'state': options.state || 'false'
+        'state': options.state || 'false',
+        'device_id': options.device_id
+      })
+      .build()
+      .execute(HttpManager.put, callback);
+  },
+
+  /**
+   * Set Volume Percentage On The Current User's Playback
+   * @param {Object} [options] Options, being state (true, false).
+   * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
+   * @example playbackShuffle({state: 'false'}).then(...)
+   * @returns {Promise|undefined} A promise that if successful, resolves into a paging object of tracks,
+   *          otherwise an error. Not returned if a callback is given.
+   */
+  setVolume: function(options, callback) {
+    return WebApiRequest.builder(this.getAccessToken())
+      .withPath('/v1/me/player/volume')
+      .withQueryParameters({
+        'volume_percent': options.volume_percent || 100,
+        'device_id': options.device_id
       })
       .build()
       .execute(HttpManager.put, callback);
@@ -1388,94 +1418,6 @@ SpotifyWebApi.prototype = {
       .withQueryParameters(options)
       .build()
       .execute(HttpManager.get, callback);
-  },
-
-  /**
-   * Retrieve recently played tracks.
-   * @param {Object} [options] Options, being type, limit, after, before.
-   * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
-   * @returns {Promise|undefined} A promise that if successful, resolves to a paging object containing simple tracks.
-   * Not returned if a callback is given.
-   */
-  getRecentlyPlayed: function(options, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/recently-played')
-      .withQueryParameters(options)
-      .build()
-      .execute(HttpManager.get, callback);
-  },
-
-  /**
-   * Retrieve currently playing track.
-   * @param {Object} [options] Options, being type, limit, after, before.
-   * @param {requestCallback} [callback] Optional callback method to be called instead of the promise.
-   * @returns {Promise|undefined} A promise that if successful, resolves to a paging object containing simple tracks.
-   * Not returned if a callback is given.
-   */
-  getCurrentlyPlaying: function(options, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/currently-playing')
-      .withQueryParameters(options)
-      .build()
-      .execute(HttpManager.get, callback);
-  },
-
-  startUserPlayback: function(device_id, options, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/play?device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .withBodyParameters(options)
-      .build()
-      .execute(HttpManager.put, callback);
-  },
-  
-  pauseUserPlayback: function(device_id, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/pause?device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .build()
-      .execute(HttpManager.put, callback);
-  },
-
-  nextUserPlayback: function(device_id, options, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/next?device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .withBodyParameters(options)
-      .build()
-      .execute(HttpManager.post, callback);
-  },
-  
-  previousUserPlayback: function(device_id, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/previous?device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .build()
-      .execute(HttpManager.post, callback);
-  },
-
-  suffleUserPlayback: function(state, device_id, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/shuffle?state=' + state + '&device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .build()
-      .execute(HttpManager.put, callback);
-  },
-
-  repeatUserPlayback: function(state, device_id, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-      .withPath('/v1/me/player/repeat?state=' + state + '&device_id=' + device_id)
-      .withHeaders({ 'Content-Type' : 'application/json' })
-      .build()
-      .execute(HttpManager.put, callback);
-  },
-
-  changeVolumeUserPlayback: function(volume_percent, device_id, callback) {
-    return WebApiRequest.builder(this.getAccessToken())
-    .withPath('/v1/me/player/volume?volume_percent =' + volume_percent + '&device_id=' + device_id)
-    .withHeaders({ 'Content-Type' : 'application/json' })
-    .build()
-    .execute(HttpManager.put, callback);
   }
 
 };

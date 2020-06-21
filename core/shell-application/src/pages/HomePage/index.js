@@ -43,6 +43,14 @@ const HomePage = () => createPage(
             setTimeout(() => {
                 dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
             }, 3000);
+
+            window.addEventListener("userActionDenied", () => {
+                alert("Only spotify premium users can use that application!");
+            });
+
+            window.addEventListener("playUserPlayback", (event) => {
+                dispatchEvent("playUserPlayback", event.detail, ["player"]);
+            })
         }
     }
 );
