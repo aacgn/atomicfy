@@ -17,7 +17,7 @@
 
 	let deviceId = null;
 
-	const notifyUseActionDenied = () => {
+	const notifyUserActionDenied = () => {
 		const postMessageData = {
             hasAtomicSignature: true,
 			event: "userActionDenied"
@@ -86,7 +86,7 @@
 			.then(
 				() => {},
 				(err) => {
-					notifyUseActionDenied();
+					notifyUserActionDenied();
 				}
 			);
 	}
@@ -110,7 +110,6 @@
 		// Ready
 		player.addListener('ready', ({ device_id }) => {
 			deviceId = device_id;
-			console.log(deviceId);
 			requestTransferMyPlayback(deviceId);
 			requestMyCurrentTrack();
 		});
@@ -135,7 +134,7 @@
 				() => {},
 				(err) => {
 					console.log(err);
-					notifyUseActionDenied();
+					notifyUserActionDenied();
 				}
 			);
 	}
@@ -150,7 +149,7 @@
 				() => {},
 				(err) => {
 					console.log(err);
-					notifyUseActionDenied();
+					notifyUserActionDenied();
 				}
 			);
 	}
@@ -166,7 +165,7 @@
 					() => {},
 					(err) => {
 						console.log(err);
-						notifyUseActionDenied();
+						notifyUserActionDenied();
 					}
 				);
 			}
@@ -179,7 +178,7 @@
 					() => {},
 					(err) => {
 						console.log(err);
-						notifyUseActionDenied();
+						notifyUserActionDenied();
 					}
 				);
 			}
@@ -196,7 +195,7 @@
 				() => {},
 				(err) => {
 					console.log(err);
-					notifyUseActionDenied();
+					notifyUserActionDenied();
 				}
 			);
 	}
@@ -212,7 +211,7 @@
 				() => {},
 				(err) => {
 					console.log(err);
-					this.notifyUseActionDenied();
+					this.notifyUserActionDenied();
 				}
 			);
 	}
@@ -228,7 +227,7 @@
 				() => {},
 				(err) => {
 					console.log(err);
-					this.notifyUseActionDenied();
+					this.notifyUserActionDenied();
 				}
 			);
 
@@ -258,7 +257,7 @@
 						() => {},
 						(err) => {
 							console.log(err);
-							notifyUseActionDenied();
+							notifyUserActionDenied();
 						}
 					);
 					break;

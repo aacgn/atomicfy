@@ -6,7 +6,6 @@ module.exports = {
   entry: "./src/main.js",
   mode: "development",
   devServer: {
-    open: true,
     port: 3002,
     headers: { "Access-Control-Allow-Origin": "*" },
   },
