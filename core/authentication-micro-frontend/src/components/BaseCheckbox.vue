@@ -36,6 +36,7 @@ export default {
   display: block;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 12px;
 }
 
 .base-checkbox label {
@@ -44,7 +45,7 @@ export default {
   max-width: 100%;
   padding-left: 1.75em;
   font-weight: 400;
-  min-height: 24px;
+  min-height: 17px;
   margin-bottom: 0;
   cursor: pointer;
 }

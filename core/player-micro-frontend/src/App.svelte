@@ -325,9 +325,6 @@
 </main>
 
 <style>
-
-@import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
-
 .player {
 	display: flex;
 	justify-content: space-between;
@@ -365,7 +362,7 @@
 }
 
 .track__text {
-	font-family: 'proxima-nova', sans-serif;
+	font-family: 'Circular Std Book' !important;
 	font-size: 10px;
     color: #b3b3b3;
 }

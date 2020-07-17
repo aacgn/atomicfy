@@ -7,6 +7,7 @@
     height: 90vh !important;
     left: 200px !important;
     width: calc(100% - 200px) !important;
+    background-color: #282828;
 }
 
 .home__player {
@@ -14,4 +15,11 @@
     top: unset !important;
     background-color: #282828;
     border-top: 1px solid #000;
+}
+
+.home__navbar {
+    height: 90vh !important;
+    left: 0 !important;
+    width: 200px !important;
+    background-color: #282828;
 }

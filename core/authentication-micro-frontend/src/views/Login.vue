@@ -47,7 +47,7 @@
       </div>
       <div class="content__container container__divider"></div>
       <div class="content__container">
-        <span class="container__text">Don"t have an account?</span>
+        <span class="container__text">Don't have an account?</span>
       </div>
       <div class="content__container" v-on:click="onClickMethodNotAvailable">
         <RoundedButton :text="'sign up for atomicfy'" class="content__btn" />
@@ -150,13 +150,13 @@ export default {
 }
 
 .container__text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   text-decoration: none;
 }
 
 .container__text--green {
-  font-size: 14px;
+  font-size: 12px;
   color: #1db954;
 }
 

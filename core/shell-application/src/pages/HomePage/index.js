@@ -1,25 +1,23 @@
-import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism, updateContext } from "@aacgn/atomic";
+import { createExternalSource, createPage, navigateTo, dispatchEvent, createTemplate, createOrganism } from "@aacgn/atomic";
 import "./index.css";
-
-import { NavBarItems } from "../../utils/enums/navbar-items.enum";
-
-import NavBar from "../../components/NavBar/index";
-
-import SpotifyWebApi from "spotify-web-api-node";
 
 const HomePage = () => createPage(
     {
         name: "home",
-        context: {
-            myPlaylistsList: []
-        },
+        context: {},
         mount: function(){
             return createTemplate({
                 className: "home"
             }, 
             'div', 
             [
-                NavBar(NavBarItems.HOME, this.context.myPlaylistsList),
+                createOrganism({}, 'div', [
+                    createExternalSource({
+                        id: "nav-bar",
+                        className: "external-source home__navbar",
+                        sourceUrl: "http://localhost:4200"
+                    })
+                ]),
                 createOrganism({}, 'div', [
                     createExternalSource({
                         id: "home",
@@ -48,38 +46,11 @@ const HomePage = () => createPage(
                 const authorizedUserParse = JSON.parse(authorizedUser);
 
                 setTimeout(() => {
-                    dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player"]);
+                    dispatchEvent("authorizedUser", authorizedUserParse, ["home", "player", "nav-bar"]);
                 }, 3000);
-    
-                const spotifyApi = new SpotifyWebApi({});
-    
-                spotifyApi.setAccessToken(authorizedUserParse.accessToken);
-    
-                spotifyApi.getUserPlaylists(null, {
-                    limit: 20
-                })
-                .then(
-                (data) => {
-                    const myPlaylistsList = data.body.items.map(
-                        (i) => {
-                            return {
-                                name: i.name,
-                                context_uri: i.uri
-                            }
-                        }
-                    );
-                    updateContext(ref, 'myPlaylistsList', myPlaylistsList);
-                }, 
-                (err) => {
-                    console.log(err);
-                });
     
                 window.addEventListener("userActionDenied", () => {
                     alert("Only spotify premium users can use that application!");
-                });
-    
-                window.addEventListener("playUserPlayback", (event) => {
-                    dispatchEvent("playUserPlayback", event.detail, ["player"]);
                 });
             }
         }

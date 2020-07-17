@@ -4,10 +4,10 @@
   </div>
 </template>
 <style>
-@import url("https://fonts.googleapis.com/css?family=Proxima+Nova");
+@import url(//db.onlinewebfonts.com/c/860c3ec7bbc5da3e97233ccecafe512e?family=Circular+Std+Book);
 
 * {
-  font-family: "proxima-nova", sans-serif !important;
+  font-family: "Circular Std Book", sans-serif !important;
   box-sizing: border-box !important;
 }
 

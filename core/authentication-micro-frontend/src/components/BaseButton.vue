@@ -13,9 +13,9 @@ export default {
 
 <style scoped>
 .btn {
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
-  padding: 16px 48px 18px;
+  padding: 14px 48px 16px;
   transition-property: background-color, border-color, color, box-shadow, filter;
   transition-duration: 0.3s;
   border-width: 0;
