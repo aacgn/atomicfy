@@ -1,6 +1,7 @@
 {
   "name": "spotify-web-api-node",
   "version": "2.5.0",
+  "private": true,
   "homepage": "https://github.com/thelinmichael/spotify-web-api-node",
   "description": "A Node.js wrapper for Spotify's Web API",
   "main": "./src/server.js",

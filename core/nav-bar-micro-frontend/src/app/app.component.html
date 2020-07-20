@@ -28,7 +28,9 @@
     <span class="nav-bar__separator"></span>
 
     <div class="nav-bar__playlists-list">
-        <span class="nav-bar__item" *ngFor="let item of items" (click)="onClickPlaylistItem(item)">{{ item.name }}</span>
+        <span class="item__text" *ngFor="let item of items" (click)="onClickPlaylistItem(item)">
+            {{ item.name }}
+        </span>
     </div>
 
 </div>

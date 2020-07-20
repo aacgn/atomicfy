@@ -53,28 +53,24 @@ class App extends React.Component {
   playUserPlayback = (context_uri) => {
     const postMessageData = {
       hasAtomicSignature: true,
-      event: "playUserPlayback",
-      data: context_uri
+      event: "custom_event",
+      data: {
+        name: "playUserPlayback",
+        data: context_uri
+      }
     }
 
     window.parent.postMessage(postMessageData, "*");
   }
 
   componentDidMount() {
-    window.addEventListener("message", (messageEvent) => {
-      const event = messageEvent.data;
-      if (event && event.hasAtomicSignature) {
+    const contextStore =  window.AtomicContextStore;
 
-        switch(event.event) {
-          case "authorizedUser":
-            this.spotifyApi.setAccessToken(event.data.accessToken);
-            this.requestFeaturedPlaylists();
-            break;
-          default:
-            break;
-        }
-      }
-    });
+    if (contextStore)
+      var authorizedUser = contextStore["app"] ? contextStore["app"]["authorizedUser"] : null;
+      if (authorizedUser)
+        this.spotifyApi.setAccessToken(authorizedUser.accessToken);
+        this.requestFeaturedPlaylists();
   }
 
   render() {

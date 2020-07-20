@@ -63,6 +63,10 @@
     text-overflow: ellipsis;
 }
 
+.item__text:hover {
+    color: #fff;
+}
+
 .nav-bar__playlists {
     color: #b3b3b3;
     text-transform: uppercase;

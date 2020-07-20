@@ -234,38 +234,45 @@
 			isMute = !isMute;
 		}
 	}
+		
 	window.onSpotifyWebPlaybackSDKReady = () => {
-		window.addEventListener("message", (messageEvent) => {
-			const event = messageEvent.data;
-			if (event && event.hasAtomicSignature) {
+		const contextStore =  window.AtomicContextStore;
 
-				switch(event.event) {
-				case "authorizedUser":
-					token = event.data.accessToken;
-					spotifyApi.setAccessToken(token);
-					configureSpotifyPlayer();
-					break;
-				case "playUserPlayback":
-					spotifyApi
-					.play({
-						device_id: deviceId
-					}, 
-					{
-						context_uri: event.data
-					})
-					.then(
-						() => {},
-						(err) => {
-							console.log(err);
-							notifyUserActionDenied();
+		if (contextStore) {
+			var authorizedUser = contextStore["app"] ? contextStore["app"]["authorizedUser"] : null;
+
+			if (authorizedUser) {
+				token = authorizedUser.accessToken;
+				spotifyApi.setAccessToken(token);
+				configureSpotifyPlayer();
+
+				window.addEventListener("message", (messageEvent) => {
+					const messageEventData = messageEvent.data;
+					if (messageEventData && messageEventData.hasAtomicSignature) {
+						switch(messageEventData.event) {
+							case "playUserPlayback":
+								spotifyApi
+								.play({
+									device_id: deviceId
+								}, 
+								{
+									context_uri: messageEventData.data
+								})
+								.then(
+									() => {},
+									(err) => {
+										console.log(err);
+										notifyUserActionDenied();
+									}
+								);
+								break;
+							default:
+								break;
 						}
-					);
-					break;
-				default:
-					break;
-				}
+					}
+				});
 			}
-		});
+		}
 	}
 </script>
 
@@ -364,7 +371,12 @@
 .track__text {
 	font-family: 'Circular Std Book' !important;
 	font-size: 10px;
-    color: #b3b3b3;
+	color: #b3b3b3;
+	max-width: 100px;
+    text-transform: unset;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .track__text--primary {

@@ -18,8 +18,11 @@ export default {
 
         const postMessageData = {
             hasAtomicSignature: true,
-            event: "authorizedUser",
-            data: authorizedUserData
+            event: "custom_event",
+            data: {
+                name: "authorizedUser",
+                data: authorizedUserData
+            }
         }
 
         window.opener.parent.postMessage(postMessageData, "*");

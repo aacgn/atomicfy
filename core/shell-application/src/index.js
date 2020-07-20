@@ -1,7 +1,17 @@
-import { bootstrap } from "@aacgn/atomic";
+import { Atomic, storeData, mapContextStore } from "@aacgn/atomic";
 
-import Routes from "./router";
+import Router from "./router/index";
 
-import "./index.css";
+import "./global.css";
 
-bootstrap(Routes, document.getElementById('root'));
+new Atomic(
+    Router,
+    document.getElementById("root")
+);
+
+const appContextStore = mapContextStore("app") || {};
+
+storeData("app", {
+    ...appContextStore,
+    authorizedUser: window.localStorage.getItem("authorizedUser") ? JSON.parse(window.localStorage.getItem("authorizedUser")) : null
+});
