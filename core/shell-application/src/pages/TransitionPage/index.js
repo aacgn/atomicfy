@@ -1,4 +1,4 @@
-import { createTemplate, createPage } from "@aacgn/atomic";
+import { createTemplate, createPage, createOrganism } from "@aacgn/atomic";
 
 import "./index.css";
 
@@ -8,22 +8,21 @@ const TransitionPage = () => createPage(
             return createTemplate({
                 tag: "div",
                 attr: {
-                    style: {
-                        "background-color":  "#000",
-                        "position": "fixed",
-                        "display": "flex",
-                        "flex-direction": "column",
-                        "justify-content": "center",
-                        "align-items": "center",
-                        "color": "#FFF",
-                        "top": 0,
-                        "left": 0,
-                        "right": 0,
-                        "bottom": 0
-                    }
+                    className: "transition",
                 },
                 props: {
-                    textContent: "Loading..."
+                    children: [
+                        createOrganism(
+                            {
+                                tag: "img",
+                                attr: {
+                                    className: "transition__logo blink-image",
+                                    src: "assets/spotify_logo_white.png"
+                                },
+                                props: {}
+                            }
+                        )
+                    ]
                 }
             })
         }

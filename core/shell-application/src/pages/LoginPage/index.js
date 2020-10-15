@@ -1,4 +1,4 @@
-import { createPage, navigateTo, createMicroFrontendWrapper, mapContextStore } from "@aacgn/atomic";
+import { createPage, navigateTo, createMicroFrontendWrapper, mapContextStore, storeData } from "@aacgn/atomic";
 
 import "./index.css";
 
